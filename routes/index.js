@@ -30,5 +30,8 @@ router.delete('/quizzes/:quizId(\\d+)',    quizController.destroy);
 router.get('/quizzes/:quizId(\\d+)/play',  quizController.play);
 router.get('/quizzes/:quizId(\\d+)/check', quizController.check);
 
+router.get('/quizzes/randomplay', quizController.randomplay);				//added
+router.get('quizzes/randomplay/:quizId(\\d+)', quizController.randomcheck);	//added
+
 
 module.exports = router;
