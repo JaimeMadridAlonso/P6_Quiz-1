@@ -177,7 +177,7 @@ exports.randomplay = (req, res, next) => {
     })
     .then(function(quiz){
         res.render('quizzes/random_play', {quiz: quiz, score: req.session.randomPlay.lenght});
-    });
+    })
     .catch(Sequelize.ValitionError, error => {
         console.log('There are errors in the form: ');
         error.errors.forEach(({message}) => console.log(message));
