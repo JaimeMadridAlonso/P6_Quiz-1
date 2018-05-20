@@ -156,7 +156,36 @@ exports.check = (req, res, next) => {
 
 //GET /quizzes/randomplay
 exports.randomplay = (req, res, next) => {
+
+    if(req.session.randomplay===undefined)         //array de IDs
+        req.session.randomplay=[];
     
+    var condition1 = {"id": {[Sequelize.Op.notIn]: req.session.randomplay}};        //excluyo los ID que ya respondi
+
+    return sequelize.models.quiz.count({where: condition1})
+    .then(rest => {
+        
+        if(rest === 0){
+            var puntuacion = req.session.randomplay.length;  
+            req.session.randomplay = [];        //elimino la sesion
+            res.render('quizzes/random_nomore', {score: puntuacion});   //renderizo pantalla final con puntuacion
+        }
+        randomId = Math.floor(Math.random() * rest);        //ID aleatoria
+        return sequelize.models.quiz.findAll({where: condition1, limit:1, offset: randomId})    //limito busqueda a
+                                                                                                //quiz que no he respondido
+                                                                                                //ID igual al random
+                                                                                                //limito a coger solo 1 quiz
+        .then(quiz => {
+            return quiz[0];                
+        })
+    })
+    .then(quiz1 => {
+        var puntuacion = req.session.randomplay.length;
+        res.render('quizzes/random_play', {quiz: quiz1, score: puntuacion});    //renderizo pantalla juego con pregunta aleatoria
+    })
+    .catch(err => {
+        console.log(err);
+    })
 
 };
 
