@@ -20,12 +20,26 @@ sequelize.import(path.join(__dirname, 'quiz'));
 sequelize.import(path.join(__dirname,'session'));
 
 // Create tables
+sequelize.sync().then(() => sequelize.models.quiz.count()).then((count) => {	//sincronizo, en la base de datos existen datos? sino los creo
+	if (!count){
+		return sequelize.models.quiz.bulkCreate([
+					{ question: 'Capital de España', answer: 'Madrid'},
+					{ question: 'Capital de Francia', answer: 'Paris'},
+					{ question: 'Capital de Italia', answer: 'Roma'},
+					{ question: 'Capital de Rusia', answer: 'Moscu'}
+				]);
+			}
+})
+.catch( err => {
+	console.log(err);
+});
+/*
 sequelize.sync()
 .then(() => console.log('Data Bases created successfully'))
 .catch(error => {
     console.log("Error creating the data base tables:", error);
     process.exit(1);
-});
+});*/
 
 
 module.exports = sequelize;

@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 
-const quizController = require('../controllers/quiz');
+const quizController = require('../controllers/quiz');		//cargo la ruta de contorladores
 
 /* GET home page. */
 router.get('/', (req, res, next) => {
@@ -30,8 +30,8 @@ router.delete('/quizzes/:quizId(\\d+)',    quizController.destroy);
 router.get('/quizzes/:quizId(\\d+)/play',  quizController.play);
 router.get('/quizzes/:quizId(\\d+)/check', quizController.check);
 
-router.get('/quizzes/randomplay', quizController.randomplay);				//added
-router.get('quizzes/randomplay/:quizId(\\d+)', quizController.randomcheck);	//added
+router.get('/quizzes/randomplay', quizController.randomplay);			
+router.get('/quizzes/randomcheck/:quizId?answer=respuesta', quizController.randomcheck);	
 
 
 module.exports = router;
