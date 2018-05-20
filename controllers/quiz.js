@@ -189,9 +189,23 @@ exports.randomplay = (req, res, next) => {
 
 };
 
-//GET /quizzes/randomcheck
-exports.randomcheck = (req, res, next) => {
+//GET /quizzes/randomcheck           
+exports.randomcheck = (req, res, next) => {     //(req, res, next, quizId, answer)
 
+    const {quiz, query} = req;
 
+    const answer = query.answer || "";
+    const result = answer.toLowerCase().trim() === quiz.answer.toLowerCase().trim();
+    const quizId = query.quizId;
+
+    if(result){
+        req.session.randomplay.push(quizId);
+        var puntuacion = req.session.randomplay.length;
+        res.render('quizzes/random_result', {score: puntuacion, answer, result});
+    }
+    else{
+        var puntuacion = req.session.randomplay.length;
+        res.render('quizzes/random_result', {score: puntuacion, answer, result})
+    }
 };
 
