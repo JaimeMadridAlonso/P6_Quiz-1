@@ -1,6 +1,7 @@
 const Sequelize = require("sequelize");
 const sequelize = require("../models");
 
+var nuevo = 1;
 // Autoload the quiz with id equals to :quizId
 exports.load = (req, res, next, quizId) => {
 
@@ -157,8 +158,9 @@ exports.check = (req, res, next) => {
 //GET /quizzes/randomplay
 exports.randomplay = (req, res, next) => {
 
-    if(req.session.randomplay===undefined)         //array de IDs
+    if(req.session.randomplay===undefined || nuevo === 1)         //array de IDs
         req.session.randomplay=[];
+    nuevo = 0;
     
     var condition1 = {"id": {[Sequelize.Op.notIn]: req.session.randomplay}};        //excluyo los ID que ya respondi
 
@@ -168,6 +170,7 @@ exports.randomplay = (req, res, next) => {
         if(rest === 0){
             var puntuacion = req.session.randomplay.length;  
             req.session.randomplay = [];        //elimino la sesion
+            nuevo = 1;
             res.render('quizzes/random_nomore', {score: puntuacion});   //renderizo pantalla final con puntuacion
         }
         randomId = Math.floor(Math.random() * rest);        //ID aleatoria
@@ -205,6 +208,7 @@ exports.randomcheck = (req, res, next) => {
     }
     else{       //si no es correcto, compruebo la puntuacion actual y renderizo la pantalla de resultado
         var puntuacion = req.session.randomplay.length;
+        nuevo = 1;
         res.render('quizzes/random_result', {score: puntuacion, answer, result})
     }
 };
