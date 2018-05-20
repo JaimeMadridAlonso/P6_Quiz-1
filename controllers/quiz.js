@@ -190,20 +190,20 @@ exports.randomplay = (req, res, next) => {
 };
 
 //GET /quizzes/randomcheck           
-exports.randomcheck = (req, res, next) => {     //(req, res, next, quizId, answer)
+exports.randomcheck = (req, res, next) => {  
 
     const {quiz, query} = req;
 
     const answer = query.answer || "";
     const result = answer.toLowerCase().trim() === quiz.answer.toLowerCase().trim();
-    const quizId = query.quizId;
+    const quizId = quiz.id;
 
-    if(result){
+    if(result){     //si es correcto, guardo el ID acertado en session, incremento puntuacion y renderizo pantalla de resultado
         req.session.randomplay.push(quizId);
         var puntuacion = req.session.randomplay.length;
         res.render('quizzes/random_result', {score: puntuacion, answer, result});
     }
-    else{
+    else{       //si no es correcto, compruebo la puntuacion actual y renderizo la pantalla de resultado
         var puntuacion = req.session.randomplay.length;
         res.render('quizzes/random_result', {score: puntuacion, answer, result})
     }
