@@ -1,11 +1,11 @@
 const Sequelize = require("sequelize");
-const {models} = require("../models");
+const sequelize = require("../models");
 
 
 // Autoload the tip with id equals to :tipId
 exports.load = (req, res, next, tipId) => {
 
-    models.tip.findById(tipId)
+    sequelize.models.tip.findById(tipId)
     .then(tip => {
         if (tip) {
             req.tip = tip;
@@ -37,10 +37,11 @@ exports.new = (req, res, next) => {
 // POST /quizzes/:quizId/tips
 exports.create = (req, res, next) => {
  
-    const tip = models.tip.build(
+    const tip = sequelize.models.tip.build(
         {
             text: req.body.text,
-            quizId: req.quiz.id
+            quizId: req.quiz.id,
+            authorId: req.session.user && req.session.user.id || 0 //added
         });
 
     tip.save()

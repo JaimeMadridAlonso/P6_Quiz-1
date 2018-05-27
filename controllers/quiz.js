@@ -1,17 +1,21 @@
 const Sequelize = require("sequelize");
 const Op = Sequelize.Op;
-const {models} = require("../models");
+const sequelize = require("../models");
 
 const paginate = require('../helpers/paginate').paginate;
 
 // Autoload the quiz with id equals to :quizId
 exports.load = (req, res, next, quizId) => {
 
-    models.quiz.findById(quizId, {
+    sequelize.models.quiz.findById(quizId, {
         include: [
-            models.tip,
-            {model: models.user, as: 'author'}
-        ]
+            sequelize.models.tip,
+            {model: sequelize.models.user, as: 'author'},
+                {include: [                              //added
+                    sequelize.models.tip,                //
+                   {model: sequelize.model.tip, as: 'tip'}         //
+            ]}                                           //
+        ]        
     })
     .then(quiz => {
         if (quiz) {
@@ -63,7 +67,7 @@ exports.index = (req, res, next) => {
         title = "Questions of " + req.user.username;
     }
 
-    models.quiz.count(countOptions)
+    sequelize.models.quiz.count(countOptions)
     .then(count => {
 
         // Pagination:
@@ -81,10 +85,10 @@ exports.index = (req, res, next) => {
             ...countOptions,
             offset: items_per_page * (pageno - 1),
             limit: items_per_page,
-            include: [{model: models.user, as: 'author'}]
+            include: [{model: sequelize.models.user, as: 'author'}]
         };
 
-        return models.quiz.findAll(findOptions);
+        return sequelize.models.quiz.findAll(findOptions);
     })
     .then(quizzes => {
         res.render('quizzes/index.ejs', {
@@ -124,7 +128,7 @@ exports.create = (req, res, next) => {
 
     const authorId = req.session.user && req.session.user.id || 0;
 
-    const quiz = models.quiz.build({
+    const quiz = sequelize.models.quiz.build({
         question,
         answer,
         authorId
