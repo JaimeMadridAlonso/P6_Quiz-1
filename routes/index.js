@@ -41,6 +41,9 @@ router.get([
 
 //-----------------------------------------------------------
 
+const quizController = require('../controllers/quiz');		//cargo la ruta de contorladores
+
+
 /* GET home page. */
 router.get('/', (req, res, next) => {
   res.render('index');
@@ -119,6 +122,9 @@ router.delete('/quizzes/:quizId(\\d+)',
 
 router.get('/quizzes/:quizId(\\d+)/play',  quizController.play);
 router.get('/quizzes/:quizId(\\d+)/check', quizController.check);
+
+router.get('/quizzes/randomplay', quizController.randomplay);			
+router.get('/quizzes/randomcheck/:quizId(\\d+)', quizController.randomcheck);	
 
 
 router.get('/quizzes/:quizId(\\d+)/tips/new',  sessionController.loginRequired,tipController.new);
