@@ -5,8 +5,6 @@ const sequelize = require("../models");
 
 const paginate = require('../helpers/paginate').paginate;
 
-const sequelize = require("../models");
-
 
 //var nuevo = 1;
 // Autoload the quiz with id equals to :quizId

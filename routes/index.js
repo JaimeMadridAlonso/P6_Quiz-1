@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 
-const quizController = require('../controllers/quiz');
+const quizController = require('../controllers/quiz');//cargo la ruta de contorladores
 const tipController = require('../controllers/tip');
 const userController = require('../controllers/user');
 const sessionController = require('../controllers/session');
@@ -38,10 +38,6 @@ router.get([
     '/users',
     '/users/:id(\\d+)/quizzes',
     '/quizzes'], saveBack);
-
-//-----------------------------------------------------------
-
-const quizController = require('../controllers/quiz');		//cargo la ruta de contorladores
 
 
 /* GET home page. */
