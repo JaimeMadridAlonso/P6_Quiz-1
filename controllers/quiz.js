@@ -1,7 +1,7 @@
 const Sequelize = require("sequelize");
 
 const Op = Sequelize.Op;
-const sequelize = require("../models");
+const {models} = require("../models");
 
 const paginate = require('../helpers/paginate').paginate;
 
@@ -11,18 +11,14 @@ const paginate = require('../helpers/paginate').paginate;
 exports.load = (req, res, next, quizId) => {
 
 
-    sequelize.models.quiz.findById(quizId, {
+    models.quiz.findById(quizId, {
         include: [
-            sequelize.models.tip,
-            {model: sequelize.models.user, as: 'author'},
-                {include: [                              //added
-                    sequelize.models.tip,                //
-                   {model: sequelize.model.tip, as: 'tip'}         //
-            ]}                                           //
+            {model: models.user, as: 'author'},
+            {model: models.tip, include: [{model: models.user, as: 'author'}]}         
         ]        
     })
 
-    sequelize.models.quiz.findById(quizId)
+    models.quiz.findById(quizId)
 
     .then(quiz => {
         if (quiz) {
@@ -75,7 +71,7 @@ exports.index = (req, res, next) => {
         title = "Questions of " + req.user.username;
     }
 
-    sequelize.models.quiz.count(countOptions)
+    models.quiz.count(countOptions)
     .then(count => {
 
         // Pagination:
@@ -93,14 +89,11 @@ exports.index = (req, res, next) => {
             ...countOptions,
             offset: items_per_page * (pageno - 1),
             limit: items_per_page,
-            include: [{model: sequelize.models.user, as: 'author'}]
+            include: [{model: models.user, as: 'author'}]
         };
 
-        return sequelize.models.quiz.findAll(findOptions);
+        return models.quiz.findAll(findOptions);
     })
-
-    sequelize.models.quiz.findAll()
-
     .then(quizzes => {
         res.render('quizzes/index.ejs', {
             quizzes, 
@@ -141,7 +134,7 @@ exports.create = (req, res, next) => {
     const authorId = req.session.user && req.session.user.id || 0;
 
 
-    const quiz = sequelize.models.quiz.build({
+    const quiz = models.quiz.build({
         question,
         answer,
         authorId
@@ -252,7 +245,7 @@ exports.randomplay = (req, res, next) => {
     
     var condition1 = {"id": {[Sequelize.Op.notIn]: req.session.randomplay}};        //excluyo los ID que ya respondi
 
-    return sequelize.models.quiz.count({where: condition1})
+    return models.quiz.count({where: condition1})
     .then(rest => {
         
         if(rest === 0){
@@ -262,7 +255,7 @@ exports.randomplay = (req, res, next) => {
             res.render('quizzes/random_nomore', {score: puntuacion});   //renderizo pantalla final con puntuacion
         }
         randomId = Math.floor(Math.random() * rest);        //ID aleatoria
-        return sequelize.models.quiz.findAll({where: condition1, limit:1, offset: randomId})    //limito busqueda a
+        return models.quiz.findAll({where: condition1, limit:1, offset: randomId})    //limito busqueda a
                                                                                                 //quiz que no he respondido
                                                                                                 //ID igual al random
                                                                                                 //limito a coger solo 1 quiz

@@ -26,7 +26,7 @@ sequelize.import(path.join(__dirname,'user'));
 sequelize.import(path.join(__dirname,'session'));
 
 // Create tables
-sequelize.sync().then(() => sequelize.models.quiz.count()).then((count) => {	//sincronizo, en la base de datos existen datos? sino los creo
+/*sequelize.sync().then(() => sequelize.models.quiz.count()).then((count) => {	//sincronizo, en la base de datos existen datos? sino los creo
 	if (!count){
 		return sequelize.models.quiz.bulkCreate([
 					{ question: 'Capital de España', answer: 'Madrid'},
@@ -38,14 +38,14 @@ sequelize.sync().then(() => sequelize.models.quiz.count()).then((count) => {	//s
 })
 .catch( err => {
 	console.log(err);
-});
-/*
+});*/
+
 sequelize.sync()
 .then(() => console.log('Data Bases created successfully'))
 .catch(error => {
     console.log("Error creating the data base tables:", error);
     process.exit(1);
-});*/
+});
 
 
 // Relation between models
