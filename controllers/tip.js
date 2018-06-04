@@ -91,3 +91,52 @@ exports.destroy = (req, res, next) => {
     .catch(error => next(error));
 };
 
+//checking if tip user or admin is trying to modify
+exports.adminOrAuthorRequired = (req, res, next) =>{
+    const {tip, session} = req;
+
+    const isAuthor = tip.authorId === session.user.id;
+    const isAdmin = session.user.isAdmin;
+
+    if(isAdmin || isAuthor){
+        next();
+    }else{
+        console.log('Prohibited operation: The logged in user is not the author of the quiz, nor an administrator.');
+        res.send(403);
+    }
+}
+
+//GET /quizzes/tips/edit
+exports.edit = (req, res, next) => {        //tengo vista edit
+
+    const {tip} = req;
+
+    res.render('tips/edit.ejs', {tip});
+}
+
+//PUT /quizzes/tips
+exports.update = (req, res ,next) => {      //no tengo vista update, vuelto a la pagina antes de editar
+
+    res.render('index');
+    /*const {tip, body, session} = req;        //body es lo que escribo en el formulario que se identifica por su 'name'
+
+    tip.text = body.newtip;
+
+    tip.save({fields: ["answer"]});
+    /*.then(tip => {
+        req.flash('success', 'Tip edited successfully.');
+        res.redirect('/user/' + session.user.id + '/quizzes/');
+    })
+    .catch(Sequelize.ValidationError, error => {
+        req.flash('error', 'There are errors in the form:');
+        error.errors.forEach(({message}) => req.flash('error', message));
+        res.render('tips/edit', {tip});
+    })
+    .catch(error => {
+        req.flash('error', 'Error editing the Tip: ' + error.message);
+        next(error);
+    });*/
+    //req.flash('success', 'Tip edited successfully.');
+    
+}
+
