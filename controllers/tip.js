@@ -109,23 +109,22 @@ exports.adminOrAuthorRequired = (req, res, next) =>{
 //GET /quizzes/tips/edit
 exports.edit = (req, res, next) => {        //tengo vista edit
 
-    const {tip} = req;
+    const {tip, quiz} = req;
 
-    res.render('tips/edit.ejs', {tip});
+    res.render('tips/edit.ejs', {tip, quiz});
 }
 
 //PUT /quizzes/tips
 exports.update = (req, res ,next) => {      //no tengo vista update, vuelto a la pagina antes de editar
 
-    res.render('index');
-    /*const {tip, body, session} = req;        //body es lo que escribo en el formulario que se identifica por su 'name'
+    const {tip, body} = req;        //body es lo que escribo en el formulario que se identifica por su 'name'
 
     tip.text = body.newtip;
 
-    tip.save({fields: ["answer"]});
-    /*.then(tip => {
+    tip.save({fields: ["text"]})
+    .then(tip => {
         req.flash('success', 'Tip edited successfully.');
-        res.redirect('/user/' + session.user.id + '/quizzes/');
+        res.redirect('/goback');
     })
     .catch(Sequelize.ValidationError, error => {
         req.flash('error', 'There are errors in the form:');
@@ -135,8 +134,6 @@ exports.update = (req, res ,next) => {      //no tengo vista update, vuelto a la
     .catch(error => {
         req.flash('error', 'Error editing the Tip: ' + error.message);
         next(error);
-    });*/
-    //req.flash('success', 'Tip edited successfully.');
-    
+    });    
 }
 

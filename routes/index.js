@@ -128,8 +128,8 @@ router.get('/quizzes/:quizId/tips/:tipId/edit',
     tipController.edit);
 //p8
 router.put('/quizzes/:quizId/tips/:tipId', 
-    //sessionController.loginRequired, 
-    //tipController.adminOrAuthorRequired,
+    sessionController.loginRequired, 
+    tipController.adminOrAuthorRequired,
     tipController.update);	
 
 
